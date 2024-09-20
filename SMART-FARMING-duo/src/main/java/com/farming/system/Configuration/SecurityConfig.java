@@ -17,8 +17,8 @@ public class SecurityConfig {
         http
             .csrf().disable() // Disable CSRF for simplicity
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/user/**").hasRole("USER")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/user/**").hasRole("USER")
                 .anyRequest().permitAll() // Allow public access to other endpoints
             )
             .formLogin().disable(); // Disable default form login

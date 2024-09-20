@@ -12,7 +12,7 @@ import com.farming.system.Model.Admin;
 import com.farming.system.Service.AdminService;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/admin")
 public class AdminController {
 
     @Autowired

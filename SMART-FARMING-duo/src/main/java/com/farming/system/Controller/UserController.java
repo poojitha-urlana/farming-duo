@@ -13,7 +13,7 @@ import com.farming.system.Service.UserService;
 
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
