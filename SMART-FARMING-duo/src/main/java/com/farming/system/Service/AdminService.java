@@ -8,8 +8,6 @@ import com.farming.system.Dto.AdminDTO;
 import com.farming.system.Model.Admin;
 import com.farming.system.Repository.AdminRepository;
 
-
-
 @Service
 public class AdminService {
 
@@ -20,14 +18,19 @@ public class AdminService {
     private PasswordEncoder passwordEncoder;
 
     public Admin registerAdmin(Admin admin) {
+        if (!admin.getPassword().equals(admin.getConfirmPassword())) {
+            throw new IllegalArgumentException("Passwords do not match");
+        }
+
         admin.setRole("ADMIN");
         admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         return adminRepository.save(admin);
     }
+
     public AdminDTO loginAdmin(String username, String password) {
         Admin admin = adminRepository.findByUsername(username);
         if (admin != null && passwordEncoder.matches(password, admin.getPassword())) {
-            return new AdminDTO(admin.getUsername(), admin.getEmail(), admin.getRole());
+            return new AdminDTO(admin.getUsername(), admin.getEmail(), admin.getRole(), admin.getFirstName(), admin.getLastName());
         }
         return null;
     }

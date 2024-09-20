@@ -17,7 +17,8 @@ public class SecurityConfig {
         http
             .csrf().disable() // Disable CSRF for simplicity
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/admin/register").permitAll() // Allow access to admin registration
+                .requestMatchers("/admin/register").permitAll()
+                .requestMatchers("/user/register", "/user/login").permitAll()// Allow access to admin registration
                 .requestMatchers("/admin/**").hasRole("ADMIN") // Restrict other admin routes to admins
                 .requestMatchers("/user/**").hasRole("USER") // Restrict user routes to users
                 .anyRequest().permitAll() // Allow public access to other endpoints

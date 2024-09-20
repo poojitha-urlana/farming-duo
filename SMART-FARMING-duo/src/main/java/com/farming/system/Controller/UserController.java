@@ -11,7 +11,6 @@ import com.farming.system.Dto.UserDTO;
 import com.farming.system.Model.User;
 import com.farming.system.Service.UserService;
 
-
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -21,11 +20,11 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody User user) {
-        User registeredUser = userService.registerUser(user);
-        if (registeredUser != null) {
+        try {
+            User registeredUser = userService.registerUser(user);
             return ResponseEntity.ok("User registered successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Error registering user");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
