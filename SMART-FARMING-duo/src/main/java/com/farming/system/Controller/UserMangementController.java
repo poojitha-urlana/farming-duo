@@ -1,7 +1,5 @@
 package com.farming.system.Controller;
 
-import com.farming.system.Dto.UserDTO;
-
 import com.farming.system.Model.User;
 import com.farming.system.Service.UserService;
 
