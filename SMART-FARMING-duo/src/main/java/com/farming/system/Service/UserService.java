@@ -1,5 +1,9 @@
 package com.farming.system.Service;
 
+
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,5 +37,44 @@ public class UserService {
             return new UserDTO(user.getUsername(), user.getEmail(), user.getRole(), user.getFirstName(), user.getLastName());
         }
         return null;
+    }
+    
+ 
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
+  
+    public User updateUser(Long id, User updatedUser) {
+        Optional<User> existingUserOpt = userRepository.findById(id);
+        if (existingUserOpt.isPresent()) {
+            User existingUser = existingUserOpt.get();
+            existingUser.setUsername(updatedUser.getUsername());
+            existingUser.setEmail(updatedUser.getEmail());
+            existingUser.setFirstName(updatedUser.getFirstName());
+            existingUser.setLastName(updatedUser.getLastName());
+
+            if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+                existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword())); // Encrypt new password
+            }
+
+            return userRepository.save(existingUser);
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
+    }
+
+    // Delete User
+    public void deleteUser(Long id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
     }
 }
