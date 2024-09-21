@@ -1,5 +1,6 @@
 package com.farming.system.Model;
 
+import java.util.List;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,27 +12,20 @@ public class Farm {
 
     private String name;
     private String location;
-    private Double area; // in acres or hectares
+    private Double area;
     private String soilType;
     private String cropName;
-    private String status; // e.g., Active, Inactive
-    private String farmSize; // e.g., Small, Medium, Large
+    private String status;
+    private String farmSize;
 
-    // Default constructor
+    @OneToMany(mappedBy = "farm", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SensorData> sensorData;
+
+    // Default Constructor
     public Farm() {}
 
-    // Parameterized constructor
-    public Farm(String name, String location, Double area, String soilType, String cropName, String status, String farmSize) {
-        this.name = name;
-        this.location = location;
-        this.area = area;
-        this.soilType = soilType;
-        this.cropName = cropName;
-        this.status = status;
-        this.farmSize = farmSize;
-    }
-
     // Getters and Setters
+
     public Long getFarmId() {
         return farmId;
     }
@@ -94,5 +88,13 @@ public class Farm {
 
     public void setFarmSize(String farmSize) {
         this.farmSize = farmSize;
+    }
+
+    public List<SensorData> getSensorData() {
+        return sensorData;
+    }
+
+    public void setSensorData(List<SensorData> sensorData) {
+        this.sensorData = sensorData;
     }
 }

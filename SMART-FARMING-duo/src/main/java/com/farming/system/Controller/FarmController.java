@@ -17,28 +17,25 @@ public class FarmController {
     @Autowired
     private FarmService farmService;
 
-    // Get all farms
     @GetMapping
     public ResponseEntity<List<Farm>> getAllFarms() {
         List<Farm> farms = farmService.getAllFarms();
         return new ResponseEntity<>(farms, HttpStatus.OK);
     }
 
-    // Get a farm by ID
     @GetMapping("/{id}")
     public ResponseEntity<Farm> getFarmById(@PathVariable Long id) {
         Optional<Farm> farm = farmService.getFarmById(id);
-        return farm.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return farm.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    // Create a new farm
     @PostMapping
     public ResponseEntity<Farm> createFarm(@RequestBody Farm farm) {
         Farm createdFarm = farmService.createFarm(farm);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdFarm);
     }
 
-    // Update a farm by ID
     @PutMapping("/{id}")
     public ResponseEntity<Farm> updateFarm(@PathVariable Long id, @RequestBody Farm updatedFarm) {
         try {
@@ -49,7 +46,6 @@ public class FarmController {
         }
     }
 
-    // Delete a farm by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFarm(@PathVariable Long id) {
         try {
