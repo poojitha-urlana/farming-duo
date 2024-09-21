@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.farming.system.Model.User;
 import com.farming.system.Service.UserService;
-import com.farming.system.Dto.UserDTO;
 
 @RestController
 @RequestMapping("/user")
@@ -16,25 +15,31 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // User registration
+    // User registration (POST request to /user/register)
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(@RequestBody User user) {
         try {
+            // Call the registerUser method in the service to register the user
             userService.registerUser(user);
             return ResponseEntity.ok(Map.of("message", "User registered successfully"));
         } catch (IllegalArgumentException e) {
+            // Handle error if passwords don't match
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }
 
-    // User login
+    // User login (POST request to /user/login)
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
-        UserDTO loggedInUser = userService.loginUser(user.getEmail(), user.getPassword());
+        // Call the loginUser method in the service to log in the user
+        User loggedInUser = userService.loginUser(user.getUsername(), user.getPassword());
+        
         if (loggedInUser != null) {
+            // Return the user info if login is successful
             return ResponseEntity.ok(loggedInUser);
         } else {
-            return ResponseEntity.status(401).body(Map.of("message", "Invalid email or password"));
+            // Return error if login fails
+            return ResponseEntity.status(401).body(Map.of("message", "Invalid username or password"));
         }
     }
 }
