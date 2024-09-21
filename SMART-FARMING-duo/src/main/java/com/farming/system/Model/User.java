@@ -12,7 +12,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private String username;
     private String password;
     private String email;
@@ -23,6 +23,22 @@ public class User {
 
     @Transient // Not saved in the database
     private String confirmPassword; // Used for validation
+
+    // Default no-arg constructor (required by JPA)
+    public User() {
+    }
+
+    // Constructor for convenience
+    public User(String username, String password, String email, String firstName, String lastName, String role, String confirmPassword) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.confirmPassword = confirmPassword;
+        updateFullName(); // Automatically update fullName when firstName and lastName are set
+    }
 
     public String getConfirmPassword() {
         return confirmPassword;
@@ -98,3 +114,4 @@ public class User {
         this.role = role;
     }
 }
+
