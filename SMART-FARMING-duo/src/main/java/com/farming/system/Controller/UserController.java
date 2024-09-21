@@ -1,40 +1,63 @@
 package com.farming.system.Controller;
 
+import com.farming.system.Model.Farm;
+import com.farming.system.Model.Sensor;
+import com.farming.system.Service.FarmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.farming.system.Dto.UserDTO;
-import com.farming.system.Model.User;
-import com.farming.system.Service.UserService;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/farms")
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private FarmService farmService;
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user) {
-        try {
-            User registeredUser = userService.registerUser(user);
-            return ResponseEntity.ok("User registered successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+    // Get all farms
+    @GetMapping
+    public List<Farm> getAllFarms() {
+        return farmService.getAllFarms();
+    }
+
+    // Get a farm by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Farm> getFarmById(@PathVariable Long id) {
+        Optional<Farm> farm = farmService.getFarmById(id);
+        return farm.map(ResponseEntity::ok)
+                   .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // Create or update a farm
+    @PostMapping
+    public Farm saveFarm(@RequestBody Farm farm) {
+        return farmService.saveFarm(farm);
+    }
+
+    // Delete a farm
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteFarm(@PathVariable Long id) {
+        farmService.deleteFarm(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // Add sensor to a specific farm
+    @PostMapping("/{farmId}/sensors")
+    public ResponseEntity<Sensor> addSensorToFarm(@PathVariable Long farmId, @RequestBody Sensor sensor) {
+        Sensor createdSensor = farmService.addSensorToFarm(farmId, sensor);
+        if (createdSensor != null) {
+            return ResponseEntity.ok(createdSensor);
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
-        UserDTO loggedInUser = userService.loginUser(user.getUsername(), user.getPassword());
-        if (loggedInUser != null) {
-            return ResponseEntity.ok(loggedInUser); // Return the UserDTO on successful login
-        } else {
-            return ResponseEntity.status(401).body("Invalid username or password");
-        }
+    // Get sensors for a specific farm
+    @GetMapping("/{farmId}/sensors")
+    public List<Sensor> getSensorsByFarmId(@PathVariable Long farmId) {
+        return farmService.getSensorsByFarmId(farmId);
     }
 }
