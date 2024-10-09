@@ -15,11 +15,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable() // Disable CSRF for simplicity
+            .csrf().disable() 
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/admin/register").permitAll()
-                .requestMatchers("/user/register", "/user/login").permitAll()// Allow access to admin registration
-                .requestMatchers("/admin/**").hasRole("ADMIN") // Restrict other admin routes to admins
+                .requestMatchers("/user/register", "/user/login").permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN") 
                 .requestMatchers("/user/**").hasRole("USER") // Restrict user routes to users
                 .anyRequest().permitAll() // Allow public access to other endpoints
             )
