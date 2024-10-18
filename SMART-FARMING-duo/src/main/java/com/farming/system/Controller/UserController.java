@@ -15,7 +15,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // User registration (POST request to /user/register)
+    
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(@RequestBody User user) {
         try {
