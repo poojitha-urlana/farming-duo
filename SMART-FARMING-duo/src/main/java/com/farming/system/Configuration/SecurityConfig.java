@@ -10,16 +10,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Bean
+	@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf().disable()  // Disable CSRF for APIs
+            .cors()  // Enable CORS
+            .and()
             .authorizeRequests()
             .requestMatchers("/api/user/register", "/api/user/login").permitAll()  // Allow public access to user registration and login
             .requestMatchers("/api/admin/**").hasRole("ADMIN")                     // Only admins can access /api/admin/**
@@ -46,5 +50,21 @@ public class SecurityConfig {
 
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager(admin.build());
         return manager;
+    }
+    
+    
+ // CORS configuration bean
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/api/**")
+                        .allowedOrigins("http://localhost:4200")  // Frontend Angular app URL
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);  // Allow credentials for login requests
+            }
+        };
     }
 }

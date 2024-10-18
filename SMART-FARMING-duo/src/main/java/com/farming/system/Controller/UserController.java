@@ -17,7 +17,7 @@ public class UserController {
 
     // Register a new user
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
             userService.registerUser(user);
             return ResponseEntity.ok("User registered successfully!");
@@ -28,15 +28,16 @@ public class UserController {
 
     // Login a user
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody Map<String, String> loginData) {
+    public ResponseEntity<?> loginUser(@RequestBody Map<String, String> loginData) {
         String username = loginData.get("username");
         String password = loginData.get("password");
 
         try {
             User user = userService.loginUser(username, password);
-            return ResponseEntity.ok("Login successful for user: " + user.getFullName());
+            // Returning user details as a response, not just a message
+            return ResponseEntity.ok(Map.of("message", "Login successful", "user", user));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }
 }
