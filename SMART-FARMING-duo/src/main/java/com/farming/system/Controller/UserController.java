@@ -1,45 +1,42 @@
 package com.farming.system.Controller;
 
-import java.util.Map;
+import com.farming.system.Model.User;
+import com.farming.system.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.farming.system.Model.User;
-import com.farming.system.Service.UserService;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("api/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    
+    // Register a new user
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> register(@RequestBody User user) {
+    public ResponseEntity<String> registerUser(@RequestBody User user) {
         try {
-            // Call the registerUser method in the service to register the user
             userService.registerUser(user);
-            return ResponseEntity.ok(Map.of("message", "User registered successfully"));
-        } catch (IllegalArgumentException e) {
-            // Handle error if passwords don't match
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+            return ResponseEntity.ok("User registered successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    // User login (POST request to /user/login)
+    // Login a user
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
-        // Call the loginUser method in the service to log in the user
-        User loggedInUser = userService.loginUser(user.getUsername(), user.getPassword());
-        
-        if (loggedInUser != null) {
-            // Return the user info if login is successful
-            return ResponseEntity.ok(loggedInUser);
-        } else {
-            // Return error if login fails
-            return ResponseEntity.status(401).body(Map.of("message", "Invalid username or password"));
+    public ResponseEntity<String> loginUser(@RequestBody Map<String, String> loginData) {
+        String username = loginData.get("username");
+        String password = loginData.get("password");
+
+        try {
+            User user = userService.loginUser(username, password);
+            return ResponseEntity.ok("Login successful for user: " + user.getFullName());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

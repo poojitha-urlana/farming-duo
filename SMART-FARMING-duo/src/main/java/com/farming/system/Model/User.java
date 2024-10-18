@@ -16,63 +16,12 @@ public class User {
     private String username;
     private String password;
     private String email;
-    private String firstName;       
-    private String lastName;       
-    private String fullName;   
-    private String role = "USER"; 
+    private String fullName;
+    
+    @Transient
+    private String confirmPassword; // For validation only, not persisted
 
-    @Transient // Not saved in the database
-    private String confirmPassword; // Used for validation
-
-    // Default no-arg constructor (required by JPA)
-    public User() {
-    }
-
-    // Constructor for convenience
-    public User(String username, String password, String email, String firstName, String lastName, String role, String confirmPassword) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.role = role;
-        this.confirmPassword = confirmPassword;
-        updateFullName(); // Automatically update fullName when firstName and lastName are set
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-        updateFullName();
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-        updateFullName();
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    private void updateFullName() {
-        this.fullName = this.firstName + " " + this.lastName;
-    }
+    // Getters and setters
 
     public Long getId() {
         return id;
@@ -106,12 +55,19 @@ public class User {
         this.email = email;
     }
 
-    public String getRole() {
-        return role;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 }
-
