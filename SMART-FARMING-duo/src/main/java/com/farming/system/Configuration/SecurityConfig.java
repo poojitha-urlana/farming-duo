@@ -27,8 +27,8 @@ public class SecurityConfig {
             .cors()  // Enable CORS
             .and()
             .authorizeRequests()
-            .requestMatchers("/api/user/register", "/api/user/login").permitAll()
-            .requestMatchers("/api/admin/login").permitAll() // Open registration and login for users
+            .requestMatchers("/api/user/register", "/api/user/login" , "/api/crop/predict").permitAll()
+           .requestMatchers("/api/admin/login").permitAll() // Open registration and login for users
             .requestMatchers("/api/admin/**").hasRole("ADMIN") 
             .requestMatchers("/api/admin/users/**").authenticated() // Only admins can access /api/admin/**
             .anyRequest().authenticated()  // All other requests require authentication
