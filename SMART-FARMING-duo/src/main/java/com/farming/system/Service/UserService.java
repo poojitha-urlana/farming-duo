@@ -1,6 +1,8 @@
 package com.farming.system.Service;
 
 import com.farming.system.Model.User;
+import com.farming.system.Exception.UserAlreadyExistsException; // Custom Exception
+import com.farming.system.Exception.InvalidCredentialsException; // Custom Exception
 import com.farming.system.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,42 +14,45 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+	 @Autowired
+	    private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+	    @Autowired
+	    private PasswordEncoder passwordEncoder;
 
-    // Register a new user
-    public User registerUser(User user) throws Exception {
-        if (!user.getPassword().equals(user.getConfirmPassword())) {
-            throw new Exception("Passwords do not match");
-        }
+	    // Register a new user
+	    public User registerUser(User user) throws UserAlreadyExistsException {
+	        // Check if the password matches
+	        if (!user.getPassword().equals(user.getConfirmPassword())) {
+	            throw new IllegalArgumentException("Passwords do not match");
+	        }
 
-        Optional<User> existingUser = userRepository.findByUsername(user.getUsername());
-        if (existingUser.isPresent()) {
-            throw new Exception("User with email already exists");
-        }
+	        // Check if the user already exists
+	        Optional<User> existingUser = userRepository.findByUsername(user.getUsername());
+	        if (existingUser.isPresent()) {
+	            throw new UserAlreadyExistsException("User with email already exists");
+	        }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
-    }
+	        // Encode password and save user
+	        user.setPassword(passwordEncoder.encode(user.getPassword()));
+	        return userRepository.save(user);
+	    }
 
-    // Authenticate user for login
-    public User loginUser(String username, String password) throws Exception {
-        Optional<User> userOpt = userRepository.findByUsername(username);
+	    // Authenticate user for login
+	    public User loginUser(String username, String password) throws InvalidCredentialsException {
+	        Optional<User> userOpt = userRepository.findByUsername(username);
 
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            if (passwordEncoder.matches(password, user.getPassword())) {
-                return user;
-            } else {
-                throw new Exception("Invalid credentials");
-            }
-        } else {
-            throw new Exception("User not found");
-        }
-    }
+	        if (userOpt.isPresent()) {
+	            User user = userOpt.get();
+	            if (passwordEncoder.matches(password, user.getPassword())) {
+	                return user;
+	            } else {
+	                throw new InvalidCredentialsException("Invalid credentials");
+	            }
+	        } else {
+	            throw new InvalidCredentialsException("User not found");
+	        }
+	    }
     
  // Create a new user
     public User createUser(User user) {

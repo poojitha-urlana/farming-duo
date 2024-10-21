@@ -29,7 +29,8 @@ public class SecurityConfig {
             .authorizeRequests()
             .requestMatchers("/api/user/register", "/api/user/login").permitAll()
             .requestMatchers("/api/admin/login").permitAll() // Open registration and login for users
-            .requestMatchers("/api/admin/**").hasRole("ADMIN")  // Only admins can access /api/admin/**
+            .requestMatchers("/api/admin/**").hasRole("ADMIN") 
+            .requestMatchers("/api/admin/users/**").authenticated() // Only admins can access /api/admin/**
             .anyRequest().authenticated()  // All other requests require authentication
             .and()
             .httpBasic()  // Use Basic Authentication for APIs
@@ -40,7 +41,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Correct way to define AuthenticationManager in modern Spring Security
+    // AuthenticationManager bean
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
