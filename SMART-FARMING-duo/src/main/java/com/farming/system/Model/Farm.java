@@ -1,6 +1,12 @@
 package com.farming.system.Model;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -17,7 +23,8 @@ public class Farm {
     private String cropName;
     private String status;
     private String farmSize;
-
+    
+    @JsonManagedReference
     @OneToMany(mappedBy = "farm", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SensorData> sensorData;
 

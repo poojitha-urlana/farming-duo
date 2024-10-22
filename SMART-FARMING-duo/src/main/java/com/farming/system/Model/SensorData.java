@@ -2,6 +2,8 @@ package com.farming.system.Model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -15,6 +17,7 @@ public class SensorData {
     private Double humidity;
     private Double waterContent;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "farm_id", nullable = false)
     private Farm farm;
@@ -22,7 +25,7 @@ public class SensorData {
     @Column(nullable = false)
     private LocalDateTime timestamp;
 
-    // Getters and Setters
+    
 
     public Long getId() {
         return id;
