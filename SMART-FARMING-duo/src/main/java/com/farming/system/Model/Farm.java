@@ -28,10 +28,10 @@ public class Farm {
     @OneToMany(mappedBy = "farm", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SensorData> sensorData;
 
-    // Default Constructor
+    
     public Farm() {}
 
-    // Getters and Setters
+    
 
     public Long getFarmId() {
         return farmId;

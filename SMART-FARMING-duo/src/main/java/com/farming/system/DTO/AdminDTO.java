@@ -6,7 +6,7 @@ public class AdminDTO {
     private String username;
     private String password;
 
-    // Constructors
+   
     public AdminDTO() {}
 
     public AdminDTO(String username, String password) {

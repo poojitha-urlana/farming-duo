@@ -23,7 +23,7 @@ public class AdminLoginController {
         this.authenticationManager = authenticationManager;
     }
 
-    // Admin login
+   
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> adminLogin(@RequestBody AdminDTO loginDto) {
         try {

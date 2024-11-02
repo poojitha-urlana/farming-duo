@@ -22,25 +22,25 @@ public class UserManagementController {
         this.userService = userService;
     }
 
-    // Create a new user
+   
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
         try {
             User newUser = userService.createUser(user);
             return new ResponseEntity<>(newUser, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(null, HttpStatus.CONFLICT); // Username already exists
+            return new ResponseEntity<>(null, HttpStatus.CONFLICT); 
         }
     }
 
-    // List all users
+    
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    // Get a user by ID
+   
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         Optional<User> user = userService.getUserById(id);
@@ -48,18 +48,18 @@ public class UserManagementController {
                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    // Update a user
+   
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
         try {
             User updatedUser = userService.updateUser(id, userDetails);
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // User not found
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
         }
     }
 
-    // Delete a user
+    
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteUser(@PathVariable Long id) {
         boolean isDeleted = userService.deleteUser(id);

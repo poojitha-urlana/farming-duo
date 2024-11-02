@@ -20,25 +20,25 @@ public class UserService {
 	    @Autowired
 	    private PasswordEncoder passwordEncoder;
 
-	    // Register a new user
+	    
 	    public User registerUser(User user) throws UserAlreadyExistsException {
-	        // Check if the password matches
+	        
 	        if (!user.getPassword().equals(user.getConfirmPassword())) {
 	            throw new IllegalArgumentException("Passwords do not match");
 	        }
 
-	        // Check if the user already exists
+	        
 	        Optional<User> existingUser = userRepository.findByUsername(user.getUsername());
 	        if (existingUser.isPresent()) {
-	            throw new UserAlreadyExistsException("User with email already exists");
+	            throw new UserAlreadyExistsException("User with name already exists");
 	        }
 
-	        // Encode password and save user
+	        
 	        user.setPassword(passwordEncoder.encode(user.getPassword()));
 	        return userRepository.save(user);
 	    }
 
-	    // Authenticate user for login
+	   
 	    public User loginUser(String username, String password) throws InvalidCredentialsException {
 	        Optional<User> userOpt = userRepository.findByUsername(username);
 
@@ -54,29 +54,27 @@ public class UserService {
 	        }
 	    }
     
- // Create a new user
+
     public User createUser(User user) {
-        // Check if username exists
+       
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new IllegalArgumentException("Username already exists");
         }
 
-        // Encode the password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
-    // Get all users
+    
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    // Get a user by ID
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
 
-    // Update a user
+ 
     public User updateUser(Long id, User userDetails) {
         return userRepository.findById(id).map(user -> {
             user.setUsername(userDetails.getUsername());
@@ -87,10 +85,11 @@ public class UserService {
                 user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
             }
             return userRepository.save(user);
+            
         }).orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
-    // Delete a user
+   
     public boolean deleteUser(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {

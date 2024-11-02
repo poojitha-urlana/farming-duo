@@ -1,6 +1,7 @@
 package com.farming.system.Service;
 
 import org.springframework.core.io.ByteArrayResource;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -26,15 +27,15 @@ public class CropPredictionService {
     public String predictDisease(MultipartFile imageFile) throws IOException {
         String flaskUrl = "http://localhost:5000/predict";
 
-        // Create headers
+        
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        // Create the file resource (ByteArrayResource)
+       
         ByteArrayResource imageResource = new ByteArrayResource(imageFile.getBytes()) {
             @Override
             public String getFilename() {
-                return imageFile.getOriginalFilename();  // Provide the filename
+                return imageFile.getOriginalFilename();  
             }
         };
 

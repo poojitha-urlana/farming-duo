@@ -23,25 +23,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable()  // Disable CSRF for APIs
-            .cors()  // Enable CORS
+            .csrf().disable()  
+            .cors()  
             .and()
             .authorizeRequests()
             .requestMatchers("/api/user/register", "/api/user/login" , "/api/crop/predict" ,  "/api/farms/**").permitAll()
            .requestMatchers("/api/admin/login").permitAll() 
             .requestMatchers("/api/admin/**").hasRole("ADMIN") 
-            .requestMatchers("/api/admin/users/**").authenticated() 
+            .requestMatchers("/api/admin/users/**").authenticated()
             .anyRequest().authenticated()  
             .and()
-            .httpBasic()  // Use Basic Authentication for APIs
+            .httpBasic() 
             .and()
             .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);  // Ensure stateless session for APIs
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);  
 
         return http.build();
     }
 
-    // AuthenticationManager bean
+   
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -62,17 +62,17 @@ public class SecurityConfig {
         return manager;
     }
 
-    // CORS configuration
+   
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:4200")  // Frontend Angular app URL
+                        .allowedOrigins("http://localhost:4200")  
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(true);  // Allow credentials for login requests
+                        .allowCredentials(true);  
             }
         };
     }

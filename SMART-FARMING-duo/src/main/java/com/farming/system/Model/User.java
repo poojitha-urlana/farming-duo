@@ -19,9 +19,9 @@ public class User {
     private String fullName;
     
     @Transient
-    private String confirmPassword; // For validation only, not persisted
+    private String confirmPassword; 
 
-    // Getters and setters
+    
 
     public Long getId() {
         return id;
