@@ -8,22 +8,30 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Farm {
 
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long farmId;
 
+    @NotBlank(message = "Farm name is mandatory")
     private String name;
+
+    @NotBlank(message = "Location is mandatory")
     private String location;
+
     private Double area;
+
+    @NotBlank(message = "Soil type is mandatory")
     private String soilType;
+
     private String cropName;
     private String status;
     private String farmSize;
-    
+
     @JsonManagedReference
     @OneToMany(mappedBy = "farm", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SensorData> sensorData;
