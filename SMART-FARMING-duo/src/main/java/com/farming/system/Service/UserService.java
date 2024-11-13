@@ -1,6 +1,7 @@
 package com.farming.system.Service;
 
 import com.farming.system.Model.User;
+
 import com.farming.system.Exception.UserAlreadyExistsException; // Custom Exception
 import com.farming.system.Exception.InvalidCredentialsException; // Custom Exception
 import com.farming.system.Repository.UserRepository;
