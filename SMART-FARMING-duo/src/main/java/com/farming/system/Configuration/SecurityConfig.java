@@ -12,9 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity
@@ -23,26 +23,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable()  
-            .cors()  
-            .and()
-            .authorizeRequests()
-            .requestMatchers("/api/user/**").permitAll()
-            .requestMatchers("/api/user/register", "/api/user/login" , "/api/crop/predict" ,  "/api/farms/**").permitAll()
-           .requestMatchers("/api/admin/login").permitAll() 
-            .requestMatchers("/api/admin/**").hasRole("ADMIN") 
-            .requestMatchers("/api/admin/users/**").authenticated()
-            .anyRequest().authenticated()  
-            .and()
-            .httpBasic() 
-            .and()
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);  
+            .csrf(csrf -> csrf.disable())  
+            .cors(cors -> {})  
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/user/**").permitAll()
+                .requestMatchers("/api/user/register", "/api/user/login", "/api/crop/predict", "/api/farms/**", "/api/sensor-data/**").permitAll()
+                .requestMatchers("/api/admin/login").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/admin/users/**").authenticated()
+                .anyRequest().authenticated()
+            )
+            .httpBasic(httpBasic -> {}); 
 
         return http.build();
     }
 
-   
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -54,26 +50,24 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
+    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
         User.UserBuilder admin = User.withUsername("admin")
-            .password(passwordEncoder().encode("admin123"))
+            .password(passwordEncoder.encode("admin123"))
             .roles("ADMIN");
 
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager(admin.build());
-        return manager;
+        return new InMemoryUserDetailsManager(admin.build());
     }
 
-   
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:4200")  
+                        .allowedOrigins("http://localhost:4200") 
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(true);  
+                        .allowCredentials(true);
             }
         };
     }

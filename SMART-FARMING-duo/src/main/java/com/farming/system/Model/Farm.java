@@ -30,9 +30,9 @@ public class Farm {
     private double latitude;     // New field
     private double longitude;    // New field
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "farm", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<SensorData> sensorData;
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "farm", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<SensorData> sensorData;
 
     // Getters and Setters
     public Long getFarmId() {
@@ -123,11 +123,11 @@ public class Farm {
         this.longitude = longitude;
     }
 
-    public List<SensorData> getSensorData() {
-        return sensorData;
-    }
-
-    public void setSensorData(List<SensorData> sensorData) {
-        this.sensorData = sensorData;
-    }
+//    public List<SensorData> getSensorData() {
+//        return sensorData;
+//    }
+//
+//    public void setSensorData(List<SensorData> sensorData) {
+//        this.sensorData = sensorData;
+//    }
 }

@@ -2,6 +2,7 @@ package com.farming.system.Model;
 
 import java.time.LocalDateTime;
 
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.*;
@@ -17,10 +18,10 @@ public class SensorData {
     private Double humidity;
     private Double waterContent;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "farm_id", nullable = false)
-    private Farm farm;
+//    @JsonBackReference
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "farm_id", nullable = false)
+//    private Farm farm;
 
     @Column(nullable = false)
     private LocalDateTime timestamp;
@@ -59,13 +60,13 @@ public class SensorData {
         this.waterContent = waterContent;
     }
 
-    public Farm getFarm() {
-        return farm;
-    }
-
-    public void setFarm(Farm farm) {
-        this.farm = farm;
-    }
+//    public Farm getFarm() {
+//        return farm;
+//    }
+//
+//    public void setFarm(Farm farm) {
+//        this.farm = farm;
+//    }
 
     public LocalDateTime getTimestamp() {
         return timestamp;

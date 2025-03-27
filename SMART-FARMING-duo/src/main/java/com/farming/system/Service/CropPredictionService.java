@@ -25,7 +25,7 @@ public class CropPredictionService {
     }
 
     public String predictDisease(MultipartFile imageFile) throws IOException {
-        String flaskUrl = "http://localhost:5000/predict";
+        String flaskUrl = "http://localhost:5001/predict";
 
         
         HttpHeaders headers = new HttpHeaders();
