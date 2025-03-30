@@ -1,34 +1,30 @@
 package com.farming.system.Controller;
 
-import com.farming.system.Model.SensorData;
-import com.farming.system.Repository.SensorDataRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.farming.system.Model.SensorData;
+import com.farming.system.Service.SensorDataService;
 
+import java.util.List;
+@CrossOrigin(origins = "*") 
 @RestController
-@RequestMapping("api/sensor-data")
+@RequestMapping("/api/sensor-data")
 public class SensorDataController {
 
-    @Autowired
-    private SensorDataRepository sensorDataRepository;
+    private final SensorDataService sensorDataService;
 
-    // Fetch all sensor data
-    @GetMapping
-    public List<SensorData> getAllSensorData() {
-        return sensorDataRepository.findAll();
+    public SensorDataController(SensorDataService sensorDataService) {
+        this.sensorDataService = sensorDataService;
     }
 
-    // Fetch the latest sensor data
-    @GetMapping("/latest")
-    public SensorData getLatestSensorData() {
-        return sensorDataRepository.findTopByOrderByIdDesc();
-    }
-
-    // Save sensor data
     @PostMapping
     public SensorData saveSensorData(@RequestBody SensorData sensorData) {
-        return sensorDataRepository.save(sensorData);
+        return sensorDataService.saveSensorData(sensorData);
+    }
+
+    @GetMapping
+    public List<SensorData> getAllSensorData() {
+        return sensorDataService.getAllSensorData();
     }
 }

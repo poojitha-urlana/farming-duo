@@ -12,6 +12,7 @@ import com.farming.system.Service.CropPredictionService;
 @RestController
 @RequestMapping("/api/crop")
 @CrossOrigin(origins = "http://localhost:4200") 
+
 public class CropPredictionController {
 
     @Autowired
