@@ -16,7 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -32,56 +31,35 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // Disable CSRF
             .csrf(csrf -> csrf.disable())
-            
-            // Enable CORS
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            
-            // Set session management to stateless
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            
-            // Set permissions on endpoints
             .authorizeHttpRequests(auth -> auth
-                // Public endpoints
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/public/**").permitAll()
-                .requestMatchers("/api/user/register").permitAll()
-                .requestMatchers("/api/user/login").permitAll()
-                .requestMatchers("/api/crop/predict").permitAll()
-                .requestMatchers("/api/farms/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/sensor-data").permitAll()
+                .requestMatchers("/api/auth/**", "/api/public/**", "/api/user/register", "/api/user/login", "/api/crop/predict", "/api/farms/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/sensor-data/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/sensor-data/**").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                
-                // Admin endpoints
                 .requestMatchers("/api/admin/login").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                
-                // User endpoints
                 .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
-                
-                // All other requests need to be authenticated
                 .anyRequest().authenticated()
             )
-            
-            // Enable HTTP Basic authentication
             .httpBasic(httpBasic -> {});
-            
+        
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // Allow your Angular app
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allowed methods
-        configuration.setAllowedHeaders(List.of("*")); // Allowed headers
-        configuration.setAllowCredentials(true); // Allow credentials
-        configuration.setMaxAge(3600L); // Max age
+        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // Adjust for production
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Apply to all paths
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
