@@ -1,6 +1,8 @@
 package com.farming.system.Model;
 
 
+
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -16,24 +18,14 @@ public class SensorData {
     private float humidity;
     private int soilMoisture;
     private boolean relayState;
-
     private LocalDateTime timestamp;
 
-    public SensorData() {
-        this.timestamp = LocalDateTime.now();
-    }
-
-    public SensorData(float temperature, float humidity, int soilMoisture, boolean relayState) {
-        this.temperature = temperature;
-        this.humidity = humidity;
-        this.soilMoisture = soilMoisture;
-        this.relayState = relayState;
-    
-        this.timestamp = LocalDateTime.now();
+    @PrePersist
+    protected void onCreate() {
+        this.timestamp = LocalDateTime.now();  // Auto-set timestamp before persisting
     }
 
     // Getters and Setters
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -49,18 +41,5 @@ public class SensorData {
     public boolean isRelayState() { return relayState; }
     public void setRelayState(boolean relayState) { this.relayState = relayState; }
 
- 
-
     public LocalDateTime getTimestamp() { return timestamp; }
-    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
-    
-    @Override
-    public String toString() {
-        return "SensorData{" +
-                "temperature=" + temperature +
-                ", humidity=" + humidity +
-                ", soilMoisture=" + soilMoisture +
-                ", relayState=" + relayState +
-                '}';
-    }
 }
